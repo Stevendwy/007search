@@ -1,0 +1,182 @@
+/* pages/resule/index.wxss */
+.result{
+  display: flex;
+  flex-direction:column;
+}
+
+.result-left{
+  display: inline-block;
+  padding:5px 0;
+  position:fixed;
+  background-color:white;
+  z-index:2;
+  width:100%;
+  /* width: 25%; */
+}
+.result-left-position{
+  /* padding-top: 30rpx; */
+  display:flex;
+  /* height:40px; */
+  flex-direction:row;
+  justify-content: space-between;
+
+}
+
+.resule-left-list{
+  font-size:8pt;
+  color:#333333;
+  letter-spacing:0px;
+  padding:0 5px;
+  margin:auto;
+
+  /* margin:0 auto 53rpx 28rpx; */
+}
+
+.resule-left-listclick{
+  color:#C8372B;
+  font-size:8pt;
+  letter-spacing:0px;
+  padding:0 5px;
+
+  /* margin:0 auto 53rpx 28rpx; */
+}
+
+
+
+
+.result-right{
+  margin-top:25px;
+  display: inline-block;
+  width: 100%;
+  /* border-left:1rpx solid #D8D8D8; */
+  height:100vh;
+  overflow-y:auto;
+}
+.brands{
+  width:135rpx;
+  height:80rpx;
+  position:absolute;
+  right:0;
+}
+.result-right-list{
+  position: relative;
+  padding: 40rpx 16rpx 0;
+}
+.nav-show{
+ display: flex;
+ align-items: center;
+}
+.nav-show .nav-show-block{
+  width: 10rpx;
+  height: 28rpx;
+  background-color: #333333;
+}
+.nav-show text{
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0px;
+  margin-left: 8rpx;
+}
+
+
+
+/*分别处理  基础信息 */
+
+.result-right-message .list-content{
+  display:flex;
+  width:100%;
+  overflow:hidden;
+  padding:24rpx 0 0 0;
+}
+
+.list-left{
+  font-size:14px;
+  color:#999999;
+  letter-spacing:0px;
+  margin-right: 5px;
+}
+
+.list-right{
+  font-size:14px;
+  color:#333333;
+  letter-spacing:0px;
+}
+
+/*统一样式 父级处理  */
+.result-right-listcontent,.result-right-listtech{
+  background:#FFFFFF;
+  border:1rpx solid #D8D8D8;
+  display:flex;
+  flex-direction:column;
+  padding:16rpx 0;
+  margin-top:20rpx;
+}
+.result-right-listcontent .list-content{
+  display:flex;
+  width:94%;
+  margin:4rpx auto;
+  overflow: hidden;
+}
+
+.result-right-listcontent .list-content .list-left{
+
+}
+
+.result-right-listcontent .list-content .list-right{
+
+}
+
+/* 价格 */
+
+.result-right-price .list-content{
+
+}
+
+.result-right-price .list-content .list-left{
+
+}
+
+.result-right-price .list-content .list-right{
+  
+}
+
+
+/*替换件 组件  */
+.result-right-replace .list-content,
+.result-right-module .list-content{
+
+}
+
+.result-right-replace .list-content .list-left,
+.result-right-module .list-content .list-left,
+{
+
+}
+
+.result-right-replace .list-content .list-right,
+.result-right-module .list-content .list-right,
+{
+  
+}
+
+/*技术信息  */
+.result-right-technology .list-content{
+  display: flex;
+}
+
+.result-right-listtech{
+  border: 0;
+  margin: 0;
+}
+
+.result-right-listtech .list-content:nth-child(5n){
+  margin-top: 20rpx;
+}
+
+.result-right-technology .list-content .list-left{
+
+}
+
+.result-right-technology .list-content .list-right{
+
+}

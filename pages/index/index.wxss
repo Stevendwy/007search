@@ -1,0 +1,118 @@
+/**index.wxss**/
+.homebody{
+  display: flex;
+  flex-direction: column;
+  background-image: url('http://owindow.cn/007search/images/wxcarbg.jpg');
+  height: 198px;
+   background-repeat: no-repeat; 
+  background-size: 100% auto;
+}
+
+.home-search{
+  display:flex;
+  height:88rpx;
+  align-items:center;
+  position:relative;
+  width:90%;
+  margin:0rpx auto;
+  top:130rpx;
+
+
+}
+.search-input{
+  width:72%;
+  height:66rpx;
+  display:inline-flex;
+  margin-left:1%;
+  background:#FFFFFF;
+  border:1px solid #D8D8D8;
+  border-radius:10rpx;
+  padding-left:8%;
+  font-size:26rpx;
+  color:#666666;
+  letter-spacing:0.27px;
+  line-height:66rpx;
+}
+.search-btn{
+  display:inline-flex;
+  flex-direction: column;
+  height: 66rpx;
+  justify-content: center;
+  font-size:32rpx;
+  color:black;
+  position: absolute;
+  right: 0; 
+  width: 18%;
+  vertical-align: middle;
+  align-items: center;
+  padding: 0;
+}
+
+.search-icon,.cancel-icon{
+  display:inline-block;
+  font-size:0;
+  position:absolute;
+}
+.search-icon{
+  left:3%;
+}
+.cancel-icon{
+  right: 22%;
+}
+
+.none-icon{
+  display: none;
+}
+
+.search-history{
+  width:79%;
+  position:absolute;
+  top:80rpx;
+  background-color:rgb(213,239,253);
+  left:10rpx;
+  border-radius: 8rpx;
+}
+.search-historyno{
+  display: none;
+}
+.search-history view{
+  padding:0 40rpx;
+  width:calc(100% - 80rpx);
+  height:89rpx;
+  border-bottom:1rpx solid #EEEEEE;
+  line-height:89rpx;
+
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0px;
+}
+
+
+
+
+
+
+
+
+
+/* .userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('http://owindow.cn/static/images/bgcar.jpg');
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+} */
