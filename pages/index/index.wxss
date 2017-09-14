@@ -86,6 +86,9 @@
   color: #333333;
   letter-spacing: 0px;
 }
+.search-img{
+  width: 100%;
+}
 
 
 
