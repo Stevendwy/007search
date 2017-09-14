@@ -1,5 +1,7 @@
 //index.js
 //获取应用实例
+var mdfive = require('../../utils/md5.js') ;
+var util = require('../../utils/util.js')
 const app = getApp()
 
 Page({
@@ -50,7 +52,15 @@ Page({
     let search_input = this.data.inputdata.replace(/\W/g, "")
     let that = this
     if (search_input.length < 1) {
-      console.log("is kongge ")
+      wx.showToast({
+        title: '请输入零件号',
+        icon: 'loading',
+        duration: 1000
+      })
+
+      setTimeout(function () {
+        wx.hideToast()
+      }, 1000)
       return
     }
 
@@ -70,9 +80,31 @@ Page({
       history: this.data.savehistory,
       input_focus: false
     })
-    wx.navigateTo({
-      url: '../resule/index',
-    })
+    let _obj = util.headAdd("/parts/search")
+        _obj.parts = search_input
+    wx.request({
+      url: 'https://beta.007vin.com/parts/search',
+      data: _obj,
+      method: 'post',
+      header: { "Content-Type": "application/x-www-form-urlencoded" },
+      success: function (res) {
+        if (res.data.data[0].status == 0){
+          wx.showToast({
+            title: '无此零件信息',
+            icon: 'loading',
+            duration: 1000
+          })
+
+          setTimeout(function () {
+            wx.hideToast()
+          }, 1000)
+        }else{
+          wx.navigateTo({
+            url: '../resule/index?fortdata=' + res.data.brand + "&pid=" + search_input ,
+          })
+        }       
+      }
+    })  
   },
 
   getpartnum: function (e) {

@@ -1,0 +1,24 @@
+{
+  "msg": "成功获取数据",
+  "code": 1,
+  "data": [
+    {
+      "data": [
+        {
+          "origin": "--",
+          "remark": "--",
+          "eot_price": "--",
+          "factory_type": 1,
+          "parttype": "原厂件",
+          "pid": "12122158252",
+          "prices": "¥151.0",
+          "mill": "宝马",
+          "cost_price": "--"
+        }
+      ],
+      "is_original_part": 1,
+      "title": "原厂件"
+    }
+  ],
+  "time": 1505294873
+}

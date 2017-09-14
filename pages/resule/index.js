@@ -1,4 +1,6 @@
 // pages/resule/index.js
+var mdfive = require('../../utils/md5.js');
+var util = require('../../utils/util.js')
 Page({
 
   /**
@@ -6,16 +8,26 @@ Page({
    */
   data: {
     clickindex:0,
-    clickid: ["gomessage", "goprice", "goreplace", "gomodule","gotechnology"],
+    clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
+    dataMes:[],
+    dataPrice:[],
+    dataReplace:[],
+    dataModule:[],
+    dataTeach:[],
+    dataTechnology:[],
+    leftlist: ["零件类型:", "厂家:", "备注:", "进价(未含税):", "进价(含税):", "销售价:"],
+    rightlist: ["parttype", "mill", "remark", "eot_price", "cost_price", "prices"],
+
+    replacelist: ["品牌:", "零件号:", "车型:", "件数:", "型号:", "参考价格:"],
+    replacerightlist: ["brandcn", "pid", "ptype", "counts", "lable", "prices"],
+
+    modulelist: ["位置:", "零件号:", "名称:", "型号:", "备注:", "件数:"],
+    modulerightlist: ["id", "pid", "label", "model", "remark", "num"],
+
     toView: "gomessage",
-    headlist: ["基础信息", "渠道价格", "替换件", "组件","技术信息"],
-    leftlist: ["品牌:", "零件号:", "车型:", "型号:", "件数:","参考价格:"],
-    rightlist: ["pid", "advise", "ptype", "origin", "haschild","price"],
+    headlist: [],
     logoimg:"",
-    mesdata: [{ "value": "\u5fae\u5c18\u6ee4\u6e05\u5668/\u6d3b\u6027\u78b3\u8fc7\u6ee4\u5668", "key": "\u539f\u5382\u540d\u79f0" }, { "value": "64319313519", "key": "\u539f\u5382OE\u53f7" }, { "value": "2017-02-19", "key": "\u66f4\u65b0\u65f6\u95f4" }],
-    pricedata: [{ "origin": "--", "remark": "--", "parttype": "\u539f\u5382\u4ef6 ", "pid": "1141598", "factory": "\u539f\u5382", "prices": "\u00a5889.0", "mill": "\u8def\u864e" },],
-    replacedata: [{ "lable": "", "haschild": 1, "price": "\u00a5294.0", "pid": "64316962549", "ptype": "Y", "num": 4, "parentnum": 3, "counts": "", "level": 3, "is_show": "", "is_last": 1, "advise": "" }, { "lable": "", "haschild": 0, "price": "\u00a5324.0", "pid": "64316946628", "ptype": "Y", "num": 5, "parentnum": 4, "counts": "", "level": 4, "is_show": "", "is_last": 1, "advise": "" }],
-    techdata: ["\u6750\u6599:", "\u5207\u65ad\u6807\u8bb0:N", "\u4ea7\u54c1\u7ea7\u522b:62", "\u6807\u51c6\u7f16\u53f7:", "\u96f6\u4ef6\u7c7b\u578b:1", "\u6570\u91cf\u5355\u4f4d:00", "PPQ:1", "RPQ:1", "CPQ:111", "\u91cd\u91cf:0.23"],
+    imgbrand:"",  //品牌图片
   },
 
 // 滚动视图
@@ -33,8 +45,83 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-  
+    console.log(options.fortdata)
+    this.dataGet(options.fortdata, options.pid)
   },
+  dataGet(date,pid) { 
+    let that = this  
+    let _obj = util.headAdd("/ppys/partssearchs")
+        _obj.part = pid
+        _obj.brand = date
+      wx.request({
+        url: 'https://beta.007vin.com/ppys/partssearchs',
+        data: _obj,
+        method: 'get',
+        header: { "Content-Type": "application/x-www-form-urlencoded" },
+        success: function (res) { 
+            let _titlelist = ["基础信息", "渠道价格", "替换件", "组件", "技术信息", "适用车型"]
+            let _data = res.data.headname || []
+            for (let o = 0; o < _data.length; o++) {
+              let _haveindex = _titlelist.indexOf(_data[o])
+              if (_haveindex != -1) {
+                if (_haveindex != 0 && _haveindex != 4 ){
+                  // 第一组数据不处理
+                  that.addDataGet(pid, date, _haveindex)
+                }
+              }
+            }
+            that.setData({
+              headlist: res.data.headname,
+              dataMes: res.data.partdetail,
+              imgbrand: res.data.img,
+              dataTeach: res.data.showmessage||[]
+            })
+        }
+      }) 
+    
+  },
+
+  addDataGet(pid, date, index) {
+    let that = this
+    let urllist = ["ppys/partssearchs", "ppys/partprices", "ppys/searchreplace", "ppys/partcompt", "不用该参数", "ppys/partcars"];
+    let _obj = util.headAdd(urllist[index]) 
+      _obj.part = pid
+      _obj.brand = date
+    wx.request({
+      url: 'https://beta.007vin.com/' + urllist[index],
+      data: _obj,
+      method: 'get',
+      header: { "Content-Type": "application/x-www-form-urlencoded" },
+      success: function (res) {
+        if (index==1){
+          that.setData({
+            dataPrice: res.data.data[0].data||[] 
+          })
+        } else if (index == 2){
+          if (res.data.data!=[]){
+            that.setData({
+              dataReplace: res.data.data || []
+            })
+          }
+          
+        } else if (index == 3){
+          console.log(res.data.data)
+          that.setData({
+            dataModule: res.data.data || []
+          })
+        } else if (index == 5){
+          that.setData({
+            dataTechnology: res.data.data || []
+          })
+        }else{
+          that.setData({
+            toView: res.data.data || []
+          })
+        }
+      }
+    })
+  },
+  
 
   /**
    * 生命周期函数--监听页面初次渲染完成

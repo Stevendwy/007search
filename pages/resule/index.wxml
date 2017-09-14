@@ -9,29 +9,29 @@
       </view>
   </view>
 
-  <scroll-view class="result-right" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true">
-    <!-- <image src="{{logoimg}}" class="brands"></image> -->
+   <scroll-view class="result-right" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"> 
+     <!-- <image src="{{imgbrand}}" class="brands"></image> -->
     <view class="result-right-list result-right-message" id="gomessage">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>基础信息</text>
       </view>
-      <block wx:for="{{mesdata}}" wx:key="{{index}}">
+      <block wx:for="{{dataMes}}" wx:key="{{index}}">
         <view class="list-content">
           <view class="list-left">{{item.key}}</view>
           <view class="list-right">{{item.value}}</view>
         </view>
       </block>
-    </view>
+    </view> 
 
 
-    <view class="result-right-list result-right-price" id="goprice">
+     <view class="result-right-list result-right-price" id="goprice">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>渠道价格</text>
       </view>
 
-      <block wx:for="{{replacedata}}" wx:key="{{index}}">
+      <block wx:for="{{dataPrice}}" wx:key="{{index}}">
         <view class="result-right-listcontent">
           <block wx:for="{{leftlist}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
             <view class="list-content">
@@ -41,62 +41,62 @@
           </block> 
         </view>
       </block>
-    </view>
+    </view> 
 
 
-    <view class="result-right-list result-right-replace" id="goreplace">
+     <view class="result-right-list result-right-replace" id="goreplace">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>替换件</text>
       </view>
 
-      <block wx:for="{{replacedata}}" wx:key="{{index}}">
+      <block wx:for="{{dataReplace}}" wx:key="{{index}}">
         <view class="result-right-listcontent">
-          <block wx:for="{{leftlist}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
+          <block wx:for="{{replacelist}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
             <view class="list-content">
               <view class="list-left">{{cell[cellindex]}}</view>
-              <view class="list-right">{{item[rightlist[cellindex]]}}</view>
+              <view class="list-right">{{item[replacerightlist[cellindex]]}}</view>
             </view>
           </block> 
         </view>
       </block>
-    </view>
+    </view> 
 
 
-    <view class="result-right-list result-right-module" id="gomodule">
+     <view class="result-right-list result-right-module" id="gomodule">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>组件</text>
       </view>
 
-      <block wx:for="{{replacedata}}" wx:key="{{index}}">
+      <block wx:for="{{dataModule}}" wx:key="{{index}}">
         <view class="result-right-listcontent">
-          <block wx:for="{{leftlist}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
+          <block wx:for="{{modulelist}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
             <view class="list-content">
-              <view class="list-left">{{cell[cellindex]}}</view>
-              <view class="list-right">{{item[rightlist[cellindex]]}}</view>
+              <view class="list-left">{{cellitem}}</view>
+              <view class="list-right">{{item[modulerightlist[cellindex]]}}</view>
             </view>
           </block> 
         </view>
       </block>
-    </view>
+    </view> 
 
 
-    <view class="result-right-list result-right-technology" id="gotechnology">
+      <view class="result-right-list result-right-technology" id="gotechnology">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>技术信息</text>
       </view>
       
       <view class="result-right-listtech">
-        <block wx:for="{{techdata}}" wx:key="{{index}}">
+        <block wx:for="{{dataTeach}}" wx:key="{{index}}">
           <view class="list-content">
             <view class="list-left">{{item}}</view>
             <view class="list-right"></view>
           </view>
         </block>
       </view>
-    </view>
-  </scroll-view>
+    </view> 
+  </scroll-view> 
 
 </view>

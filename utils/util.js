@@ -1,3 +1,4 @@
+var mdfive = require('./md5.js');
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -16,4 +17,29 @@ const formatNumber = n => {
 
 module.exports = {
   formatTime: formatTime
+}
+
+function json2Form(json) {
+  var str = [];
+  for (var p in json) {
+    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(json[p]));
+  }
+  return str.join("&");
+}
+module.exports = {
+  json2Form: json2Form,
+}
+
+function headAdd(url){
+  var timestamp = Date.parse(new Date());
+  let  obj = {
+    "time": timestamp,
+    "secret_auth": 1,
+    "sign": mdfive.hexMD5("xiaochengxu" + url + timestamp)
+  }
+  return obj
+}
+
+module.exports = {
+  headAdd: headAdd,
 }
