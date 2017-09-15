@@ -11,7 +11,7 @@
   background-color:white;
   z-index:2;
   width:100%;
-  /* width: 25%; */
+  box-shadow: 0 1px 8px 0 rgba(0,0,0,0.4);
 }
 .result-left-position{
   /* padding-top: 30rpx; */
@@ -37,18 +37,12 @@
   font-size:8pt;
   letter-spacing:0px;
   padding:0 5px;
-
-  /* margin:0 auto 53rpx 28rpx; */
 }
-
-
-
 
 .result-right{
   margin-top:25px;
   display: inline-block;
   width: 100%;
-  /* border-left:1rpx solid #D8D8D8; */
   height:100vh;
   overflow-y:auto;
 }
@@ -78,8 +72,6 @@
   margin-left: 8rpx;
 }
 
-
-
 /*分别处理  基础信息 */
 
 .result-right-message .list-content{
@@ -94,12 +86,26 @@
   color:#999999;
   letter-spacing:0px;
   margin-right: 5px;
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+  word-break: break-all;
+  width: 30%;
 }
 
 .list-right{
   font-size:14px;
   color:#333333;
   letter-spacing:0px;
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: center; */
+  word-break: break-all;
+  width: 70%;
+}
+
+.result-right-technology .list-left{
+  width: 100%;
 }
 
 /*统一样式 父级处理  */
@@ -118,47 +124,6 @@
   overflow: hidden;
 }
 
-.result-right-listcontent .list-content .list-left{
-
-}
-
-.result-right-listcontent .list-content .list-right{
-
-}
-
-/* 价格 */
-
-.result-right-price .list-content{
-
-}
-
-.result-right-price .list-content .list-left{
-
-}
-
-.result-right-price .list-content .list-right{
-  
-}
-
-
-/*替换件 组件  */
-.result-right-replace .list-content,
-.result-right-module .list-content{
-
-}
-
-.result-right-replace .list-content .list-left,
-.result-right-module .list-content .list-left,
-{
-
-}
-
-.result-right-replace .list-content .list-right,
-.result-right-module .list-content .list-right,
-{
-  
-}
-
 /*技术信息  */
 .result-right-technology .list-content{
   display: flex;
@@ -173,10 +138,6 @@
   margin-top: 20rpx;
 }
 
-.result-right-technology .list-content .list-left{
-
-}
-
-.result-right-technology .list-content .list-right{
-
+.notshow{
+  display: none;
 }

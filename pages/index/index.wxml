@@ -11,7 +11,7 @@
         bindfocus="focusInputEvent"
         bindblur="blurInputEvent"
         />
-      <icon type="cancel" size="15" class="{{inputclear?'cancel-icon':'.none-icon'}}" bindtap="inputClear"></icon>
+      <icon type="cancel" size="15" class="{{inputclear?'cancel-icon':'none-icon'}}" bindtap="inputClear"></icon>
       <button class="search-btn" bindtap="goSearch">查询</button>
 
       <view class='{{input_focus?"search-history":"search-historyno"}}'>

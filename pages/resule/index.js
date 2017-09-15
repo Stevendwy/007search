@@ -9,12 +9,14 @@ Page({
   data: {
     clickindex:0,
     clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
+
     dataMes:[],
     dataPrice:[],
     dataReplace:[],
     dataModule:[],
     dataTeach:[],
     dataTechnology:[],
+
     leftlist: ["零件类型:", "厂家:", "备注:", "进价(未含税):", "进价(含税):", "销售价:"],
     rightlist: ["parttype", "mill", "remark", "eot_price", "cost_price", "prices"],
 
@@ -23,6 +25,9 @@ Page({
 
     modulelist: ["位置:", "零件号:", "名称:", "型号:", "备注:", "件数:"],
     modulerightlist: ["id", "pid", "label", "model", "remark", "num"],
+
+    technologylist: ["车型:", "市场:", "年份:","零件组:"],
+    technologyrightlist: ["cars_model", "market", "year", "group_name"],
 
     toView: "gomessage",
     headlist: [],
@@ -38,14 +43,12 @@ Page({
       toView:_id,
       clickindex: _index
     })
-    console.log(this.data.toView)
   }, 
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.log(options.fortdata)
     this.dataGet(options.fortdata, options.pid)
   },
   dataGet(date,pid) { 
@@ -61,9 +64,12 @@ Page({
         success: function (res) { 
             let _titlelist = ["基础信息", "渠道价格", "替换件", "组件", "技术信息", "适用车型"]
             let _data = res.data.headname || []
+                _data.unshift("基础信息")
+            let _clickid = []
             for (let o = 0; o < _data.length; o++) {
               let _haveindex = _titlelist.indexOf(_data[o])
               if (_haveindex != -1) {
+                _clickid.push(that.data.clickid[_haveindex])
                 if (_haveindex != 0 && _haveindex != 4 ){
                   // 第一组数据不处理
                   that.addDataGet(pid, date, _haveindex)
@@ -71,7 +77,8 @@ Page({
               }
             }
             that.setData({
-              headlist: res.data.headname,
+              clickid: _clickid,
+              headlist: _data,
               dataMes: res.data.partdetail,
               imgbrand: res.data.img,
               dataTeach: res.data.showmessage||[]
@@ -105,17 +112,12 @@ Page({
           }
           
         } else if (index == 3){
-          console.log(res.data.data)
           that.setData({
             dataModule: res.data.data || []
           })
-        } else if (index == 5){
+        } else {
           that.setData({
             dataTechnology: res.data.data || []
-          })
-        }else{
-          that.setData({
-            toView: res.data.data || []
           })
         }
       }
