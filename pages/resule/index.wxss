@@ -36,7 +36,7 @@
   display:inline-flex;
   height:66rpx;
   justify-content:center;
-  font-size:34rpx;
+  font-size:10pt;
   position:relative;
   width:17%;
   align-items:center;
@@ -51,11 +51,11 @@
 }
 .search-icon{
   left:4%;
-   top:30rpx; 
+   top:32rpx; 
 }
 .cancel-icon{
   right:21%;
-  top:26rpx;
+  top:28rpx;
 }
 
 .none-icon{
@@ -176,9 +176,10 @@
 
 .result-right-message .list-content{
   display:flex;
-  width:100%;
+  width:94%;
   overflow:hidden;
   padding:12rpx 0 12rpx 0;
+  margin:4rpx auto;
   border-bottom:1px dashed #d8d8d8;
 }
 
@@ -207,6 +208,7 @@
 
 .result-right-technology .list-left{
   width: 100%;
+  padding-left:3%;
 }
 
 /*统一样式 父级处理  */

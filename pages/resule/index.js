@@ -37,8 +37,8 @@ Page({
     input_focus: true,
     inputclear: false,
     inputdata: "",
-    savehistory: [],
-    history: ["95820102100", "64319313519", "23001222887","3350433090E1"],
+    savehistory: ["95820102100", "64319313519", "24007621038", "12317605061","12317605478"],
+    history: ["95820102100", "64319313519", "24007621038", "12317605061","12317605478"],
 
     searched:false,
     getresult:false,

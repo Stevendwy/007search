@@ -21,7 +21,7 @@
 
 .home-search icon{
   position:relative;
-  top:10rpx;
+  top:14rpx;
 }
 .home-search text{
   font-size: 26rpx;
