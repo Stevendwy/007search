@@ -1,10 +1,36 @@
-<!--pages/resule/index.wxml-->
-<view class="result" >
+<!--pages/resule-search  -->
+<view class='search'>
+  <view class='search-body'>
+    <icon type="search" size="12" class="search-icon"></icon>
+        <input class="search-input" 
+          name="searchinput"
+          placeholder="零件号搜索"
+          focus="{{input_focus}}"
+          value="{{inputdata}}"
+          bindinput="inputchange"
+          />
+        <icon type="cancel" size="15" class="{{inputclear?'cancel-icon':'none-icon'}}" bindtap="inputClear"></icon>
+        <view class="search-btn" bindtap="goSearch">查询</view>
+  </view>
+</view>
 
+<!--pages/search history  -->
+<view class='{{searched ?"notshow":"search-history"}}'>
+  <view class='historytitle'>历史记录</view>
+  <block wx:for="{{history}}" wx:key="{{index}}" > 
+    <view class="search-h-click" bindtap="getpartnum" data-world="{{item}}">{{item}}</view>
+  </block>
+</view>
+<!--pages/search wrong  -->
+<view class='{{searched && (getresult==false) ?"show-wrong":"notshow"}}'>
+  <text>抱歉，没有找到与此零件号相关的信息</text>
+</view>
+<!--pages/resule/index.wxml-->
+<view class='{{searched && getresult ?"result":"notshow"}}' >
   <view class="result-left">
       <view class="result-left-position">
         <block wx:for="{{headlist}}" wx:key="{{index}}">
-          <button class="{{clickindex==index?'resule-left-listclick':'resule-left-list'}}" bindtap="scrollToViewFn" data-id="{{clickid[index]}}" data-index="{{index}}">{{item}}</button>
+          <view class="{{clickindex==index?'resule-left-listclick':'resule-left-list'}}" bindtap="scrollToViewFn" data-id="{{clickid[index]}}" data-index="{{index}}">{{item}}</view>
         </block>
       </view>
   </view>

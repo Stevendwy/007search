@@ -1,13 +1,14 @@
 {
   "pages":[
-    "pages/index/index",
+    "pages/homemv/index",
     "pages/resule/index",
+    "pages/index/index",
     "pages/logs/logs"
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "零零汽零件号查询",
+    "navigationBarBackgroundColor": "#2C2D31",
+    "navigationBarTitleText": "零零汽",
     "navigationBarTextStyle":"black"
   }
 }
