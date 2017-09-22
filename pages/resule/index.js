@@ -69,6 +69,16 @@ Page({
       })
       return
     }
+    this.setData({
+      dataMes: [],
+      dataPrice: [],
+      dataReplace: [],
+      dataModule: [],
+      dataTeach: [],
+      dataTechnology: [],
+      toView: "gomessage",
+      clickindex: 0,     
+    })
     let _obj = util.headAdd("/parts/search")
     _obj.parts = search_input
     wx.request({
@@ -210,7 +220,8 @@ Page({
             for (let o = 0; o < _data.length; o++) {
               let _haveindex = _titlelist.indexOf(_data[o])
               if (_haveindex != -1) {
-                _clickid.push(that.data.clickid[_haveindex])
+                let _bugdata = ["gomessage", "goprice", "goreplace", "gomodule", "goteach", "gotechnology"]
+                _clickid.push(_bugdata[_haveindex])
                 if (_haveindex != 0 && _haveindex != 4 ){
                   // 第一组数据不处理
                   that.addDataGet(pid, date, _haveindex)
