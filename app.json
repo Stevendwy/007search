@@ -10,5 +10,18 @@
     "navigationBarBackgroundColor": "#2C2D31",
     "navigationBarTitleText": "零零汽",
     "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "list": [{
+      "pagePath":"pages/homemv/index",
+      "text": "搜索",
+      "iconPath": "./images/p_007.png",
+      "selectedIconPath": "./images/p_007.png"
+    },{
+      "pagePath": "pages/index/index",
+      "text": "个人",
+      "iconPath": "./images/p_007.png",
+      "selectedIconPath": "./images/p_007.png"
+    }]
   }
 }
