@@ -6,241 +6,12 @@ const app = getApp()
 
 Page({
   data: {
-    imgsrc:"http://owindow.cn/007search/images/p_sign.png",
-    input_focus:false,
-    inputclear: false,
-    inputdata:"",
-    savehistory: [],
-    history: [],
-    motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
 
     selectid:-1,
-    branddata: {
-      "msg": "",
-      "code": 1,
-      "data": [
-        {
-          "data": [
-            {
-              "id": 13,
-              "contents": [
-                "试用全部品牌",
-                "当日",
-                "¥ 10.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "试用一天"
-        },
-        {
-          "data": [
-            {
-              "id": 14,
-              "contents": [
-                "全部品牌",
-                "一年",
-                "¥ 2800.0"
-              ],
-              "showHot": true
-            }
-          ],
-          "title": "一年全品牌"
-        },
-        {
-          "data": [
-            {
-              "id": 16,
-              "contents": [
-                "大众、奥迪、斯柯达、西雅特",
-                "一年",
-                "¥ 1800.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 18,
-              "contents": [
-                "大众、斯柯达、西雅特",
-                "一年",
-                "¥ 1500.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 19,
-              "contents": [
-                "奥迪",
-                "一年",
-                "¥ 1500.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 24,
-              "contents": [
-                "兰博基尼",
-                "一年",
-                "¥ 1500.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 25,
-              "contents": [
-                "宾利",
-                "一年",
-                "¥ 1000.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 23,
-              "contents": [
-                "保时捷",
-                "一年",
-                "¥ 900.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 26,
-              "contents": [
-                "斯柯达",
-                "一年",
-                "¥ 600.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "大众集团"
-        },
-        {
-          "data": [
-            {
-              "id": 27,
-              "contents": [
-                "劳斯莱斯",
-                "一年",
-                "¥ 500.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 21,
-              "contents": [
-                "宝马、MINI",
-                "一年",
-                "¥ 100.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "宝马集团"
-        },
-        {
-          "data": [
-            {
-              "id": 20,
-              "contents": [
-                "奔驰、Smart",
-                "一年",
-                "¥ 200.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "戴姆勒集团"
-        },
-        {
-          "data": [
-            {
-              "id": 17,
-              "contents": [
-                "玛莎拉蒂",
-                "一年",
-                "¥ 2000.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 28,
-              "contents": [
-                "法拉利",
-                "一年",
-                "¥ 1500.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "菲亚特集团"
-        },
-        {
-          "data": [
-            {
-              "id": 15,
-              "contents": [
-                "路虎",
-                "一年",
-                "¥ 2000.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 29,
-              "contents": [
-                "捷豹",
-                "一年",
-                "¥ 1000.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "塔塔集团"
-        },
-        {
-          "data": [
-            {
-              "id": 30,
-              "contents": [
-                "丰田",
-                "一年",
-                "¥ 200.0"
-              ],
-              "showHot": false
-            },
-            {
-              "id": 31,
-              "contents": [
-                "雷克萨斯",
-                "一年",
-                "¥ 200.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "丰田集团"
-        },
-        {
-          "data": [
-            {
-              "id": 22,
-              "contents": [
-                "沃尔沃",
-                "一年",
-                "¥ 1000.0"
-              ],
-              "showHot": false
-            }
-          ],
-          "title": "吉利集团"
-        }
-      ],
-      "time": 1506395298
-    }
+    branddata: {} 
   },
   setSelectid(e){
     let _id = e.currentTarget.dataset.id
@@ -248,11 +19,84 @@ Page({
       selectid: _id
     })
   },
+  randomWord(randomFlag, min, max) {
+    let str = "";
+    let  range = min;
+    let  arr =['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+    // 随机产生
+    if(randomFlag) {
+      range = Math.round(Math.random() * (max - min)) + min;
+    }
+  for (let i = 0; i<range; i++) {
+    let pos = Math.round(Math.random() * (arr.length - 1));
+    str += arr[pos];
+  }
+  return str;
+},
   payBtn(){
     let _selectid = this.data.selectid
     if (_selectid==-1){
       console.log("wrong")
+      wx.showToast({
+        title: '请选择购买种类',
+        icon: 'loading',
+        duration: 1000
+      })
+      setTimeout(function () {
+        wx.hideToast()
+      }, 1000)
+    }else{
+      var that = this
+      let _usercode = getApp().globalData.usercode; 
+      console.log(_usercode)
+      //统一支付
+          let _obj = util.headAdd("/pays/wx")
+            _obj.type = _selectid,
+            _obj.device = 'pc'
+          // var pay = res.data
+          // //发起支付
+          // var timeStamp = pay[0].timeStamp;
+          // var packages = pay[0].package;
+          // var paySign = pay[0].paySign;
+          // var nonceStr = pay[0].nonceStr;
+          // var param = { "timeStamp": timeStamp, "package": packages, "paySign": paySign, "signType": "MD5", "nonceStr": nonceStr };
+          wx.request({
+            url: "https://beta.007vin.com/pays/wx",
+            data: _obj,
+            method: 'POST',
+            header: {
+              'Cookie': 'language="languageCode=zh-CN"; real_ip="2|1:0|10:1506664524|7:real_ip|16:NTkuNjMuMjQ4LjQy|32f5eb64daa034d6ff44b438a752d6d4b13f907de38bd943f84bcfe5bfb86ee8"; JSESSIONID=30dd4292eb8fe1bf0461227588f0cbe4; SessionId="2|1:0|10:1506664524|9:SessionId|20:IjE1MDY2NjQ1MjQuNjIi|e3cecc00fd283be16c9c33a8ac9597aa1e5dbb47a86041fca1150700825c4b37"; Authorization="2|1:0|10:1506664524|13:Authorization|20:IjE4MzM3MTI1OTg3Ig==|4997ff325afd75914c06f99390e89c25ddcf750afa29985a2511770e457471c4"', "Content-Type": "application/x-www-form-urlencoded"},
+            success: function (resp) {
+              console.log(resp)
+            }}
+          )
+            // that.pay()
     }
+  },
+  /* 支付   */
+  pay: function () {
+    console.log("支付")
+    let _noncestr = this.randomWord(false,31);
+    let _timestamp = ""+Date.parse(new Date())+"";
+    wx.requestPayment(
+      {
+        'timeStamp': _timestamp,
+        'nonceStr': _noncestr,
+        'package': 'prepay_id=wx20170613225827f7b3ae0eb50671866580',
+        'signType': 'MD5',
+        'paySign': '66469A4C01431A4FCED2E7E78449B44A',
+        'success': function (res) { 
+          console.log("aaa")
+          console.log(res)
+        },
+        'fail': function (res) { 
+          console.log("bbb")
+        },
+        'complete': function (res) {
+          console.log("ccc")
+         }
+      }) 
   },
   onLoad: function () {
     if (app.globalData.userInfo) {
@@ -281,17 +125,20 @@ Page({
         }
       })
     }
-  // var that = this;
-  //   wx.getStorage({
-  //     key: 'savehistory',
-  //     success: function (res) {
-  //       let _data = res.data
-  //       that.setData({
-  //         history: _data,
-  //         savehistory: _data
-  //       });
-  //     }
-  //   });
+    // https://007vin.com/order/commodity
+    let that = this
+    let _obj = util.headAdd("/order/commodity")
+    wx.request({
+      url: 'https://beta.007vin.com/order/commodity',
+      data: _obj,
+      method: 'get',
+      header: { "Content-Type": "application/x-www-form-urlencoded" },
+      success: function (res) {
+        // console.log(res)
+        that.setData({
+          branddata:res.data
+        })
+      }})
   },
   getUserInfo: function(e) {
     app.globalData.userInfo = e.detail.userInfo

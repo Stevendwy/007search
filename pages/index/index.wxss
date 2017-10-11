@@ -42,6 +42,12 @@
   color:#ff5502;
 }
 
+.paybtn{
+  margin: 50rpx;
+  background-color:#FF5502;
+  color:white;
+}
+
 
 
 
