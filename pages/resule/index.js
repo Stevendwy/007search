@@ -1,12 +1,19 @@
 // pages/resule/index.js
+var Bmob = require('../../utils/bmob.js');
 var mdfive = require('../../utils/md5.js');
 var util = require('../../utils/util.js')
+const app = getApp()
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    userInfo: {},
+    hasUserInfo: false,
+
+    brandlist:[],
+    storebrand:"",
     clickindex:0,
     clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
 
@@ -17,8 +24,8 @@ Page({
     dataTeach:[],
     dataTechnology:[],
 
-    leftlist: ["零件类型:", "厂家:", "备注:", "进价(未含税):", "进价(含税):", "销售价:"],
-    rightlist: ["parttype", "mill", "remark", "eot_price", "cost_price", "prices"],
+    leftlist: ["零件类型:", "厂家:", "说明:", "地区:", "库存:", "销售价:","供货商:"],
+    rightlist: ["parttype", "mill", "remark", "location", "amount", "prices", "supplier"],
 
     replacelist: ["品牌:", "零件号:", "车型:", "件数:", "型号:", "参考价格:"],
     replacerightlist: ["brandcn", "pid", "ptype", "counts", "lable", "prices"],
@@ -33,7 +40,8 @@ Page({
     headlist: [],
     logoimg:"",
     imgbrand:"",  //品牌图片
-
+    imgbottom: "../../images/p_img.png",
+    
     input_focus: true,
     inputclear: false,
     inputdata: "",
@@ -42,6 +50,7 @@ Page({
 
     searched:false,
     getresult:false,
+    manybrand:false,
   },
   inputchange: function (e) {
     let s_input = e.detail.value.replace(/[^a-zA-Z0-9]/g, '').toLocaleUpperCase()
@@ -50,17 +59,25 @@ Page({
       inputdata: s_input,
       inputclear: s_show,
     })
+    if (s_show == false){
+      this.setData({
+        searched: false,
+        getresult: false,
+      })
+    }
   },
 
   inputClear: function () {
     this.setData({
       inputdata: "",
-      inputclear: false
+      inputclear: false,
+      searched: false,
+      getresult: false,
     })
   },
   goSearch: function (e) {
-    // let search_input = this.data.inputdata.replace(/\W/g, "")
-    let search_input = this.data.inputdata
+    let search_input = this.data.inputdata.replace(/[^\w\n]/g, "")
+    // let search_input = this.data.inputdata
     let that = this
     if (search_input.length < 1) {
       that.setData({
@@ -81,26 +98,27 @@ Page({
     })
     let _obj = util.headAdd("/parts/search")
     _obj.parts = search_input
+    _obj.brand = that.data.storebrand
     wx.request({
-      url: 'https://beta.007vin.com/parts/search',
+      url: 'https://007vin.com/parts/search',
       data: _obj,
       method: 'post',
       header: { "Content-Type": "application/x-www-form-urlencoded" },
       success: function (res) {
-        if (res.data.data[0].status == 0 || res.data.code == 6) {
+        if (res.data.code == 0 ) {
           that.setData({
             searched: true,
             getresult: false,
+            manybrand:false,
           })
-          // wx.showToast({
-          //   title: '无此零件信息',
-          //   icon: 'loading',
-          //   duration: 1000
-          // })
-          // setTimeout(function () {
-          //   wx.hideToast()
-          // }, 1000)
-        } else {
+        } else if ( res.data.code == 6){
+          that.setData({
+            searched: true,
+            getresult: false,
+            manybrand: true,
+            brandlist: res.data.data
+          }) 
+        }else {
           let _savehistory = that.data.savehistory
           let ishav = _savehistory.indexOf(search_input)
           if (ishav == -1) {
@@ -118,11 +136,40 @@ Page({
             getresult: true,
             savehistory: _savehistory,
             history: _savehistory,
-            input_focus: false
+            input_focus: false,
+            storebrand:""
           })
           that.dataGet(res.data.brand, search_input)
         }
       }
+    })
+
+    // 添加表
+    console.log(that.data.userInfo) 
+    var Diary = Bmob.Object.extend("diary");
+    var diary = new Diary();
+    diary.set("title", "hello");
+    diary.set("content", that.data.userInfo.nickName);
+    //添加数据，第一个入口参数是null
+    diary.save(null, {
+      success: function (result) {
+        // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
+        console.log("日记创建成功, objectId:" + result.id);
+      },
+      error: function (result, error) {
+        // 添加失败
+        console.log('创建日记失败');
+
+      }
+    });
+  },
+  getbrand:function(e){
+    let _brand = e.currentTarget.dataset.brand
+    let that = this
+    that.setData({
+      storebrand: _brand
+    },()=>{
+      that.goSearch()
     })
   },
 
@@ -162,7 +209,34 @@ Page({
         that.goSearch()
       })
     }
-    
+    if (that.data.inputdata.length>0){
+      wx.getClipboardData({
+        success: function (res) {
+          let _data = res.data
+          var reg = new RegExp("^[A-Za-z0-9]+$")
+          if (reg.test(_data)) {
+            wx.showModal({
+              title: '提示',
+              content: '是否粘贴剪切板内容',
+              success: function (ress) {
+                if (ress.confirm) {
+                  let _data = res.data.toLocaleUpperCase()
+                  that.setData({
+                    input_focus: false,
+                    inputdata: _data,
+                    inputclear: true
+                  }, () => {
+                    that.goSearch()
+                  })
+                } else {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          }
+        }
+      })
+    }
     wx.getStorage({
       key: 'savehistory',
       success: function (res) {
@@ -173,34 +247,33 @@ Page({
         });
       }
     });
-
-    wx.getClipboardData({
-      success: function (res) {
-        // console.log(res.data)
-        let _data = res.data
-        var reg = new RegExp("^[A-Za-z0-9]+$")
-        if (reg.test(_data)) {
-          wx.showModal({
-            title: '提示',
-            content: '是否粘贴剪切板内容',
-            success: function (ress) {
-              if (ress.confirm) {
-                let _data = res.data.toLocaleUpperCase()
-                that.setData({
-                  input_focus: false,
-                  inputdata: _data,
-                  inputclear: true
-                }, () => {
-                  that.goSearch()
-                })
-              } else {
-                console.log('用户点击取消')
-              }
-            }
+    //获取用户信息
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      })
+    } else if (this.data.canIUse) {
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      app.userInfoReadyCallback = res => {
+        this.setData({
+          userInfo: res.userInfo,
+          hasUserInfo: true
+        })
+      }
+    } else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
           })
         }
-      }
-    })
+      })
+    } 
   },
   dataGet(date,pid) { 
     let that = this  
@@ -208,7 +281,7 @@ Page({
         _obj.part = pid
         _obj.brand = date
       wx.request({
-        url: 'https://beta.007vin.com/ppys/partssearchs',
+        url: 'https://007vin.com/ppys/partssearchs',
         data: _obj,
         method: 'get',
         header: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -255,7 +328,7 @@ Page({
       _obj.part = pid
       _obj.brand = date
     wx.request({
-      url: 'https://beta.007vin.com/' + urllist[index],
+      url: 'https://007vin.com/' + urllist[index],
       data: _obj,
       method: 'get',
       header: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -342,5 +415,13 @@ Page({
      }
    }
 
+  },
+  getUserInfo: function (e) {
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
+    })
   }
 })

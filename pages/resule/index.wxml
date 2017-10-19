@@ -4,7 +4,7 @@
     <icon type="search" size="12" class="search-icon"></icon>
         <input class="search-input" 
           name="searchinput"
-          placeholder="零件号搜索"
+          placeholder="请输入完整零件号"
           focus="{{input_focus}}"
           value="{{inputdata}}"
           bindinput="inputchange"
@@ -23,8 +23,31 @@
 </view>
 <!--pages/search wrong  -->
 <view class='{{searched && (getresult==false) ?"show-wrong":"notshow"}}'>
-  <text>抱歉，没有找到与此零件号相关的信息</text>
+  <view  class='{{manybrand?"notshow":"wrong-mes"}}'>
+    抱歉，没有找到与此零件号相关的信息
+    <view class="home-img">
+      <image src="{{imgbottom}}" class="imagetwo" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <!--pages/search many brand  -->
+  <view class='{{manybrand?"show-brand":"notshow"}}'>
+    <view class='brand-title'>请选择品牌</view>
+    <view class='brand-content'>
+        <block wx:for="{{brandlist}}" wx:key="{{index}}" >
+          <view class='brand-imgname'>
+            <image src="https://007vin.com{{item.img}}" 
+              class="brand-img"
+              mode="aspectFit"
+              bindtap="getbrand" 
+              data-brand="{{item.brand}}"></image>
+              <text>{{item.name}}</text>
+          </view>
+      </block>
+    </view>
+  </view>
 </view>
+
 <!--pages/resule/index.wxml-->
 <view class='{{searched && getresult ?"result":"notshow"}}' >
   <view class="result-left">
@@ -35,9 +58,10 @@
       </view>
   </view>
 
-   <scroll-view class="result-right" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"> 
+   <scroll-view class="result-right"  scroll-y="true" scroll-with-animation="true"> 
+   <!-- <scroll-view class="result-right" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"> -->
      <!-- <image src="{{imgbrand}}" class="brands"></image> -->
-    <view class='{{dataMes.length < 1 ? "notshow":"result-right-list result-right-message"}}' id="gomessage">
+    <view class='{{dataMes.length > 0 && toView=="gomessage" ? "result-right-list result-right-message":"notshow"}}' id="gomessage">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>基础信息</text>
@@ -51,7 +75,7 @@
     </view> 
 
 
-     <view class= '{{dataPrice.length < 1 ? "notshow":"result-right-list result-right-price"}}' id="goprice">
+     <view class= '{{dataPrice.length > 0 && (toView=="goprice") ? "result-right-list result-right-price":"notshow"}}' id="goprice">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>渠道价格</text>
@@ -70,7 +94,7 @@
     </view> 
 
 
-     <view class='{{dataReplace.length < 1 ? "notshow":"result-right-list result-right-replace"}}' id="goreplace">
+     <view class='{{dataReplace.length > 0 && (toView=="goreplace") ? "result-right-list result-right-replace":"notshow"}}' id="goreplace">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>替换件</text>
@@ -89,7 +113,7 @@
     </view> 
 
 
-     <view class='{{dataModule.length < 1 ? "notshow":"result-right-list result-right-module"}}' id="gomodule">
+     <view class='{{dataModule.length > 0 && (toView=="gomodule") ? "result-right-list result-right-module":"notshow"}}' id="gomodule">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>组件</text>
@@ -108,7 +132,7 @@
     </view> 
 
 
-      <view class='{{dataTeach.length < 1 ? "notshow":"result-right-list result-right-technology"}}' id="goteach">
+      <view class='{{dataTeach.length > 0 && (toView=="goteach") ? "result-right-list result-right-technology":"notshow"}}' id="goteach">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>技术信息</text>
@@ -124,7 +148,7 @@
       </view>
     </view> 
 
-    <view class="{{dataTechnology.length < 1 ? 'notshow':'result-right-list result-right-module'}}" id="gotechnology">
+    <view class='{{dataTechnology.length > 0 && (toView=="gotechnology") ? "result-right-list result-right-module":"notshow"}}' id="gotechnology">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>适用车型</text>
@@ -145,5 +169,4 @@
       </block>
     </view> 
   </scroll-view> 
-
 </view>

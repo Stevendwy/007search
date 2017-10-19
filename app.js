@@ -1,4 +1,6 @@
 //app.js
+var Bmob = require('utils/bmob.js');
+Bmob.initialize("ee79e07cccbb72349200f6fa0db5ff37", "d308232fe2aaa3057a026c9b2f12f374");
 App({
   onLaunch: function () {
     // 展示本地存储能力
@@ -9,8 +11,6 @@ App({
     // 登录
     wx.login({
       success: res => {
-        console.log(res.code)
-        this.globalData.usercode = res.code
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
@@ -36,7 +36,6 @@ App({
     })
   },
   globalData: {
-    userInfo: null,
-    usercode :null
+    userInfo: null
   }
 })
