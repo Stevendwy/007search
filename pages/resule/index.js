@@ -2,6 +2,7 @@
 var Bmob = require('../../utils/bmob.js');
 var mdfive = require('../../utils/md5.js');
 var util = require('../../utils/util.js')
+var sellData = require('../../locationdata/sellmarket.js')
 const app = getApp()
 Page({
 
@@ -9,6 +10,9 @@ Page({
    * 页面的初始数据
    */
   data: {
+    sellmarket: sellData, //买方市场
+    selllefttitle: ["库存", "供应商","联系电话"],
+    sellrightlist: ["remark", "name","phone"],
     userInfo: {},
     hasUserInfo: false,
 
@@ -144,6 +148,9 @@ Page({
       }
     })
 
+    // 获取用户资料
+    
+    this.newgetuserInfo()
     // 添加表
     console.log(that.data.userInfo) 
     var Diary = Bmob.Object.extend("diary");
@@ -193,7 +200,7 @@ Page({
       toView:_id,
       clickindex: _index
     })
-  }, 
+  },
 
   /**
    * 生命周期函数--监听页面加载
@@ -247,13 +254,18 @@ Page({
         });
       }
     });
+    this.newgetuserInfo() 
+  },
+  newgetuserInfo:function(){
     //获取用户信息
     if (app.globalData.userInfo) {
+      console.log("aaaaa")
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
     } else if (this.data.canIUse) {
+      console.log("bbbbbb")
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
       app.userInfoReadyCallback = res => {
@@ -263,6 +275,7 @@ Page({
         })
       }
     } else {
+      console.log("ccccc")
       // 在没有 open-type=getUserInfo 版本的兼容处理
       wx.getUserInfo({
         success: res => {
@@ -273,7 +286,7 @@ Page({
           })
         }
       })
-    } 
+    }
   },
   dataGet(date,pid) { 
     let that = this  

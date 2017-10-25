@@ -154,8 +154,7 @@
         <text>适用车型</text>
       </view> 
 
-      <block wx:for="{{dataTechnology}}" wx:key="{{index}}">
-        
+      <block wx:for="{{dataTechnology}}" wx:key="{{index}}">       
           <block wx:for="{{dataTechnology[index]}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
             <view class="result-right-listcontent">
               <block wx:for="{{technologylist}}" wx:key="{{index}}">
@@ -168,5 +167,64 @@
           </block> 
       </block>
     </view> 
+
+
+
+
+
+
+
+
+
+    
+
+    <view class='{{sellmarket.length > 0 && (toView=="toSell") ? "result-right-list result-right-tosell":"notshow"}}' id="toSell">
+      <view class="nav-show">
+        <view class="nav-show-block"></view>
+        <text>卖方资料</text>
+      </view>
+
+      <block wx:for="{{sellmarket}}" wx:key="{{index}}">
+        <view class="result-right-listcontent">
+          <block wx:for="{{selllefttitle}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
+            <view class="list-content">
+              <text selectable class="list-left">{{cellitem}}</text>
+              <text selectable class="list-right">{{item[sellrightlist[cellindex]]}}</text>
+            </view>
+          </block> 
+        </view>
+      </block>
+    </view>
+
+    <view class='{{sellmarket.length > 0 && (toView=="toBuy") ? "result-right-list result-right-tosell":"notshow"}}' id="toBuy">
+      <view class="nav-show">
+        <view class="nav-show-block"></view>
+        <text>买方资料</text>
+      </view>
+
+      <block wx:for="{{sellmarket}}" wx:key="{{index}}">
+        <view class="result-right-listcontent">
+          <block wx:for="{{selllefttitle}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
+            <view class="list-content">
+              <text selectable class="list-left">{{cellitem}}</text>
+              <text selectable class="list-right">{{item[sellrightlist[cellindex]]}}</text>
+            </view>
+          </block> 
+        </view>
+      </block>
+    </view>
+
+
+    <view class="result-btn">
+      <button 
+        class="{{clickindex == 11?'resule-left-btn':'resule-left-list'}}"                   bindtap="scrollToViewFn" 
+        data-id="toSell" 
+        data-index="{{11}}">卖方市场</button>
+      <button class="{{clickindex == 12?'resule-left-btn':'resule-left-list'}}"                  bindtap="scrollToViewFn" 
+            data-id="toBuy" 
+            data-index="{{12}}" 
+      >买方市场</button>
+    </view>
+
   </scroll-view> 
 </view>

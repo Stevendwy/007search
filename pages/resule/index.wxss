@@ -158,7 +158,7 @@
   justify-content: center;
 }
 
-.resule-left-listclick{
+.resule-left-listclick,.resule-left-btn{
   color:#C8372B;
   font-size:11pt;
   letter-spacing:0px;
@@ -166,6 +166,10 @@
   flex-direction: column;
   justify-content: center;
   border-bottom:2px solid #C8372B;
+}
+
+.resule-left-btn{
+  border-bottom:transparent;
 }
 
 .result-right{
@@ -183,7 +187,7 @@
 }
 .result-right-list{
   position: relative;
-  padding: 40rpx 16rpx 0;
+  padding: 40rpx 16rpx 100rpx 16rpx;
 }
 .nav-show{
  display: flex;
@@ -270,6 +274,11 @@
   margin-top: 20rpx;
 }
 
+/*卖方市场  */
+/* .result-right-tosell {
+  padding-bottom: 50px;
+} */
+
 /*添加图片  */
 .home-img{
   width: 100%;
@@ -283,4 +292,16 @@
 
 .notshow{
   display: none;
+}
+
+.result-btn{
+  display:flex;
+  position:fixed;
+  bottom:0;
+  justify-content: space-around;
+  width:100%;
+}
+
+.result-btn button{
+  width: 50%;
 }
