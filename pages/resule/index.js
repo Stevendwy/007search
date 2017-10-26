@@ -10,9 +10,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    sellmarket: sellData, //买方市场
+    sellmarket: sellData, //供货市场
     selllefttitle: ["库存", "供应商","联系电话"],
     sellrightlist: ["remark", "name","phone"],
+
+    buymarket: [], //需求市场
+    buylefttitle: ["客户", "需求", "联系电话"],
+    buyrightlist: ["name", "pid", "phone"],
+
     userInfo: {},
     hasUserInfo: false,
 
@@ -80,96 +85,153 @@ Page({
     })
   },
   goSearch: function (e) {
-    let search_input = this.data.inputdata.replace(/[^\w\n]/g, "")
-    // let search_input = this.data.inputdata
-    let that = this
-    if (search_input.length < 1) {
-      that.setData({
-        searched: false,
-        getresult: false,
+    // 获取用户资料 二次添加需用
+    if (this.data.hasUserInfo != true) {
+      let that = this
+      wx.showToast({
+        title: '请点击用户信息',
+        icon: 'loading',
+        duration: 2000
       })
-      return
-    }
-    this.setData({
-      dataMes: [],
-      dataPrice: [],
-      dataReplace: [],
-      dataModule: [],
-      dataTeach: [],
-      dataTechnology: [],
-      toView: "gomessage",
-      clickindex: 0,     
-    })
-    let _obj = util.headAdd("/parts/search")
-    _obj.parts = search_input
-    _obj.brand = that.data.storebrand
-    wx.request({
-      url: 'https://007vin.com/parts/search',
-      data: _obj,
-      method: 'post',
-      header: { "Content-Type": "application/x-www-form-urlencoded" },
-      success: function (res) {
-        if (res.data.code == 0 ) {
-          that.setData({
-            searched: true,
-            getresult: false,
-            manybrand:false,
-          })
-        } else if ( res.data.code == 6){
-          that.setData({
-            searched: true,
-            getresult: false,
-            manybrand: true,
-            brandlist: res.data.data
-          }) 
-        }else {
-          let _savehistory = that.data.savehistory
-          let ishav = _savehistory.indexOf(search_input)
-          if (ishav == -1) {
-            _savehistory.unshift(search_input)
-            if (_savehistory.length > 5) {
-              _savehistory = _savehistory.slice(0, 5)
+
+      setTimeout(function () {
+        wx.hideToast()
+        wx.openSetting({
+          success: function (data) {
+            if (data.authSetting["scope.userInfo"] == true) {
+              wx.getUserInfo({
+                success: function (datw) {
+                  console.info(datw.userInfo);
+                  app.globalData.userInfo = datw.userInfo
+                  that.setData({
+                    userInfo: datw.userInfo,
+                    hasUserInfo: true
+                  })
+                },
+                fail: function () {
+                  console.info("2授权失败返回数据");
+                }
+              })
             }
-            wx.setStorage({
-              key: 'savehistory',
-              data: _savehistory
-            });
           }
-          that.setData({
-            searched: true,
-            getresult: true,
-            savehistory: _savehistory,
-            history: _savehistory,
-            input_focus: false,
-            storebrand:""
-          })
-          that.dataGet(res.data.brand, search_input)
+        })
+      }, 2000)
+    }else{
+      let search_input = this.data.inputdata.replace(/[^\w\n]/g, "")
+      let that = this
+      if (search_input.length < 1) {
+        that.setData({
+          searched: false,
+          getresult: false,
+        })
+        return
+      }
+      this.setData({
+        dataMes: [],
+        dataPrice: [],
+        dataReplace: [],
+        dataModule: [],
+        dataTeach: [],
+        dataTechnology: [],
+        toView: "gomessage",
+        clickindex: 0,
+      })
+      let _obj = util.headAdd("/parts/search")
+      _obj.parts = search_input
+      _obj.brand = that.data.storebrand
+      wx.request({
+        url: 'https://007vin.com/parts/search',
+        data: _obj,
+        method: 'post',
+        header: { "Content-Type": "application/x-www-form-urlencoded" },
+        success: function (res) {
+          if (res.data.code == 0) {
+            that.setData({
+              searched: true,
+              getresult: false,
+              manybrand: false,
+            })
+          } else if (res.data.code == 6) {
+            that.setData({
+              searched: true,
+              getresult: false,
+              manybrand: true,
+              brandlist: res.data.data
+            })
+          } else {
+            let _savehistory = that.data.savehistory
+            let ishav = _savehistory.indexOf(search_input)
+            if (ishav == -1) {
+              _savehistory.unshift(search_input)
+              if (_savehistory.length > 5) {
+                _savehistory = _savehistory.slice(0, 5)
+              }
+              wx.setStorage({
+                key: 'savehistory',
+                data: _savehistory
+              });
+            }
+            that.setData({
+              searched: true,
+              getresult: true,
+              savehistory: _savehistory,
+              history: _savehistory,
+              input_focus: false,
+              storebrand: ""
+            })
+            that.dataGet(res.data.brand, search_input)
+            // 添加表 录入数据库
+            var Diary = Bmob.Object.extend("factory");
+            var diary = new Diary();
+            diary.set("pid", search_input);
+            diary.set("name", that.data.userInfo.nickName);
+            diary.set("phone", "******");
+            diary.set("remark", "******");
+            diary.set("role", "buy");
+
+            //添加数据，第一个入口参数是null
+            diary.save(null, {
+              success: function (result) {
+                // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
+                // console.log("日记创建成功, objectId:" + result.id);
+              },
+              error: function (result, error) {
+                // 添加失败
+                // console.log('创建日记失败');
+
+              }
+            });
+
+
+          }
         }
-      }
-    })
+      })
+    }
 
-    // 获取用户资料
     
-    this.newgetuserInfo()
-    // 添加表
-    console.log(that.data.userInfo) 
-    var Diary = Bmob.Object.extend("diary");
-    var diary = new Diary();
-    diary.set("title", "hello");
-    diary.set("content", that.data.userInfo.nickName);
-    //添加数据，第一个入口参数是null
-    diary.save(null, {
-      success: function (result) {
-        // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
-        console.log("日记创建成功, objectId:" + result.id);
-      },
-      error: function (result, error) {
-        // 添加失败
-        console.log('创建日记失败');
-
-      }
-    });
   },
+  //获取用户手机号
+  getPhoneNumber: function (e) {
+    // console.log(e.detail.errMsg)
+    // console.log(e.detail.iv)
+    // console.log(e.detail.encryptedData)
+    // if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+    //   wx.showModal({
+    //     title: '提示',
+    //     showCancel: false,
+    //     content: '未授权',
+    //     success: function (res) { }
+    //   })
+    // } else {
+    //   wx.showModal({
+    //     title: '提示',
+    //     showCancel: false,
+    //     content: '同意授权',
+    //     success: function (res) { }
+    //   })
+    // }
+  },
+
   getbrand:function(e){
     let _brand = e.currentTarget.dataset.brand
     let that = this
@@ -201,7 +263,40 @@ Page({
       clickindex: _index
     })
   },
-
+// 获取需求市场数据
+  scrollToViewFnBtn: function (e) {
+    let _id = e.target.dataset.id;
+    let _index = e.target.dataset.index;
+    let that = this
+    if (this.data.buymarket.length < 1){
+      var Diary = Bmob.Object.extend("factory");
+      var query = new Bmob.Query(Diary);
+      
+      // query.limit(10);
+      query.find({
+        success: function (object) {
+          let _cleardata = []
+          if (object.length>10){
+            _cleardata = object.reverse().slice(0,9)
+          }
+          that.setData({
+            buymarket: _cleardata,
+            toView: _id,
+            clickindex: _index
+          })
+          // 查询成功
+        },
+        error: function (error) {
+          console.log("查询失败: " + error.code + " " + error.message);
+        }
+      });
+    }else{
+      that.setData({
+        toView: _id,
+        clickindex: _index
+      })
+    }
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -259,13 +354,11 @@ Page({
   newgetuserInfo:function(){
     //获取用户信息
     if (app.globalData.userInfo) {
-      console.log("aaaaa")
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true
       })
     } else if (this.data.canIUse) {
-      console.log("bbbbbb")
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
       app.userInfoReadyCallback = res => {
@@ -275,7 +368,6 @@ Page({
         })
       }
     } else {
-      console.log("ccccc")
       // 在没有 open-type=getUserInfo 版本的兼容处理
       wx.getUserInfo({
         success: res => {
@@ -430,7 +522,6 @@ Page({
 
   },
   getUserInfo: function (e) {
-    console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,

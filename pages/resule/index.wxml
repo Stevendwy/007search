@@ -202,12 +202,12 @@
         <text>买方资料</text>
       </view>
 
-      <block wx:for="{{sellmarket}}" wx:key="{{index}}">
+      <block wx:for="{{buymarket}}" wx:key="{{index}}">
         <view class="result-right-listcontent">
-          <block wx:for="{{selllefttitle}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
+          <block wx:for="{{buylefttitle}}" wx:key="cell" wx:for-item="cellitem" wx:for-index="cellindex">
             <view class="list-content">
               <text selectable class="list-left">{{cellitem}}</text>
-              <text selectable class="list-right">{{item[sellrightlist[cellindex]]}}</text>
+              <text selectable class="list-right">{{item[buyrightlist[cellindex]]}}</text>
             </view>
           </block> 
         </view>
@@ -219,12 +219,13 @@
       <button 
         class="{{clickindex == 11?'resule-left-btn':'resule-left-list'}}"                   bindtap="scrollToViewFn" 
         data-id="toSell" 
-        data-index="{{11}}">卖方市场</button>
-      <button class="{{clickindex == 12?'resule-left-btn':'resule-left-list'}}"                  bindtap="scrollToViewFn" 
+        data-index="{{11}}"
+        >供货商</button>
+      <button class="{{clickindex == 12?'resule-left-btn':'resule-left-list'}}"                  bindtap="scrollToViewFnBtn" 
             data-id="toBuy" 
-            data-index="{{12}}" 
-      >买方市场</button>
+            data-index="{{12}}"
+      >需求市场</button>
     </view>
-
+<!--open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"   -->
   </scroll-view> 
 </view>
