@@ -270,8 +270,7 @@ Page({
     let that = this
     if (this.data.buymarket.length < 1){
       var Diary = Bmob.Object.extend("factory");
-      var query = new Bmob.Query(Diary);
-      
+      var query = new Bmob.Query(Diary);    
       // query.limit(10);
       query.find({
         success: function (object) {
