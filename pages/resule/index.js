@@ -10,19 +10,23 @@ Page({
    * 页面的初始数据
    */
   data: {
-    sellmarket: sellData, //供货市场
-    selllefttitle: ["库存", "供应商","联系电话"],
-    sellrightlist: ["remark", "name","phone"],
+    phoneNumber:"",               //拨打电话
+    textareavalue: "",            //textarea 输入内容
+    storehas:[],                  //是否新加仓库
+    sellmarket: sellData,         //供货市场
+    selllefttitle: ["供应商", "联系电话","库存"],
+    sellrightlist: ["name", "phone", "remark"],
 
-    buymarket: [], //需求市场
-    buylefttitle: ["客户", "需求", "联系电话"],
+    buymarket: [],                  //需求市场
+    buylefttitle: ["客户", "求购零件号", "联系电话"],
     buyrightlist: ["name", "pid", "phone"],
 
     userInfo: {},
     hasUserInfo: false,
 
-    brandlist:[],
+    brandlist:[],                   //存储的品牌
     storebrand:"",
+    toView: "gomessage",
     clickindex:0,
     clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
 
@@ -45,10 +49,9 @@ Page({
     technologylist: ["车型:", "市场:", "年份:","零件组:"],
     technologyrightlist: ["cars_model", "market", "year", "group_name"],
 
-    toView: "gomessage",
     headlist: [],
     logoimg:"",
-    imgbrand:"",  //品牌图片
+    imgbrand:"",                          //品牌图片
     imgbottom: "../../images/p_img.png",
     
     input_focus: true,
@@ -93,7 +96,6 @@ Page({
         icon: 'loading',
         duration: 2000
       })
-
       setTimeout(function () {
         wx.hideToast()
         wx.openSetting({
@@ -101,7 +103,7 @@ Page({
             if (data.authSetting["scope.userInfo"] == true) {
               wx.getUserInfo({
                 success: function (datw) {
-                  console.info(datw.userInfo);
+                  console.info(datw);
                   app.globalData.userInfo = datw.userInfo
                   that.setData({
                     userInfo: datw.userInfo,
@@ -180,29 +182,64 @@ Page({
               storebrand: ""
             })
             that.dataGet(res.data.brand, search_input)
-            // 添加表 录入数据库
-            var Diary = Bmob.Object.extend("factory");
-            var diary = new Diary();
-            diary.set("pid", search_input);
-            diary.set("name", that.data.userInfo.nickName);
-            diary.set("phone", "******");
-            diary.set("remark", "******");
-            diary.set("role", "buy");
-
-            //添加数据，第一个入口参数是null
-            diary.save(null, {
-              success: function (result) {
-                // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
-                // console.log("日记创建成功, objectId:" + result.id);
-              },
-              error: function (result, error) {
-                // 添加失败
-                // console.log('创建日记失败');
-
-              }
-            });
+            let _storehas = that.data.storehas
+            let _addpid = [];
+            _storehas.forEach(function (val, index, arr) {
+              _addpid.push(val.attributes.pid)
+            })
+            if (_addpid.indexOf(search_input) == -1){
 
 
+              //调用微信登录接口  
+              wx.login({
+                success: function (loginCode) {
+                  console.log(loginCode)
+                  //获取openId
+                  // wx.request({
+                  //   url: 'https://api.weixin.qq.com/sns/jscode2session',
+                  //   data: {                     
+                  //     appid: 'wxe7a1eb2d258d1150',                     
+                  //     secret: 'd1b8f55bccd82763db9745f080b38ddc',
+                  //     grant_type: 'authorization_code',
+                  //     js_code: loginCode.code
+                  //   },
+                  //   method: 'GET',
+                  //   header: { 'content-type': 'application/json' },
+                  //   success: function (res) {
+                  //     console.log(res.data.openid)  
+                  //   }
+                  // })
+                }
+              }) 
+
+
+
+
+
+
+
+
+              // 添加表 录入数据库
+              let Diary = Bmob.Object.extend("factory");
+              let diary = new Diary();
+              diary.set("pid", search_input);
+              diary.set("name", that.data.userInfo.nickName);
+              diary.set("phone", "******");
+              diary.set("remark", "******");
+              diary.set("role", "buy");
+              //添加数据，第一个入口参数是null
+              diary.save(null, {
+                success: function (result) {
+                  // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
+                  // console.log("日记创建成功, objectId:" + result.id);
+                },
+                error: function (result, error) {
+                  // 添加失败
+                  // console.log('创建日记失败');
+
+                }
+              });
+            }
           }
         }
       })
@@ -210,11 +247,24 @@ Page({
 
     
   },
+  //提交反馈信息
+  feedBackBtn:function(e){
+    console.log(e.detail.value.textarea)
+    this.setData({
+      textareavalue: ''
+    })
+    // 延时 完善微信bug 
+    setTimeout(_ => {
+      this.setData({
+        textareavalue: ''
+      })
+    }, 300)
+  },
   //获取用户手机号
   getPhoneNumber: function (e) {
-    // console.log(e.detail.errMsg)
-    // console.log(e.detail.iv)
-    // console.log(e.detail.encryptedData)
+    console.log(e.detail.errMsg)
+    console.log(e.detail.iv)
+    console.log(e.detail.encryptedData)
     // if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
     //   wx.showModal({
     //     title: '提示',
@@ -231,7 +281,14 @@ Page({
     //   })
     // }
   },
+  // 拨打电话
+  phoneNumTap:function(){
+    // wx.makePhoneCall({
+    //   phoneNumber: '17682302034',
+    // })
+  },
 
+  //获取品牌
   getbrand:function(e){
     let _brand = e.currentTarget.dataset.brand
     let that = this
@@ -265,12 +322,13 @@ Page({
   },
 // 获取需求市场数据
   scrollToViewFnBtn: function (e) {
+    console.log(this.data.userInfo)
     let _id = e.target.dataset.id;
     let _index = e.target.dataset.index;
     let that = this
-    if (this.data.buymarket.length < 1){
-      var Diary = Bmob.Object.extend("factory");
-      var query = new Bmob.Query(Diary);    
+    if (that.data.buymarket.length < 1){
+      let Diary = Bmob.Object.extend("factory");
+      let query = new Bmob.Query(Diary);    
       // query.limit(10);
       query.find({
         success: function (object) {
@@ -279,6 +337,7 @@ Page({
             _cleardata = object.reverse().slice(0,9)
           }
           that.setData({
+            storehas: _cleardata,
             buymarket: _cleardata,
             toView: _id,
             clickindex: _index

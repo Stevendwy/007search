@@ -1,72 +1,5 @@
 /**index.wxss**/
-.databody{
-  display: flex;
-  flex-direction: column;
-
-}
-
-.datatitle{
-  height: 80rpx;
-  background-color: #F2F2F2;
-  display: flex;
-  vertical-align: middle;
-  align-items:center;
-  padding:0 20rpx;
-  color: #666666;
-  font-size: 10pt;
-  /* border: 1rpx solid #F2F2F2;  */
-}
-.datalist{
-  height: 80rpx;
-  display: flex;
-  flex-direction: row;
-  padding:0 20rpx;
-  justify-content: space-between;
-  font-size: 10pt;
-   border: 1px solid #d8d8d8; 
-}
-
-.datalistselect{
-    background: #FFF6F2;
-    border: 1rpx solid #FF5502;
-}
-
-.datalist .datalist-brand{
-  display: flex;
-  align-items:center;
-}
-
-.datalist .datalist-marey{
-  display: flex;
-  align-items:center;
-  color:#ff5502;
-}
-
-.paybtn{
-  margin: 50rpx;
-  background-color:#FF5502;
-  color:white;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* .homebody{
+.homebody{
   display: flex;
   flex-direction: column;
   background-image: url('http://owindow.cn/007search/images/wxcarbg.jpg');
@@ -137,6 +70,7 @@
   width:79%;
   position:absolute;
   top:80rpx;
+  /* background-color:rgb(213,239,253); */
   background-color:#F9F9F9;
   left:10rpx;
   border-radius: 8rpx;
@@ -157,7 +91,7 @@
 }
 .search-img{
   width: 100%;
-} */
+}
 
 
 

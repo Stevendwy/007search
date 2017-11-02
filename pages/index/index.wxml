@@ -1,16 +1,38 @@
 <!--index.wxml-->
-<view class='person'>
-  <view class='databody'>
-    <block wx:for="{{branddata.data}}" wx:key="{{index}}">
-      <view class='datatitle'>{{item.title}}</view>
-      <block wx:for="{{item.data}}" wx:key="cell" wx:for-item="cellitem" >
-          <view class="{{selectid==cellitem.id?'datalist  datalistselect':'datalist'}}" 
-          data-id="{{cellitem.id}}" bindtap='setSelectid'>
-            <view class='datalist-brand'>{{cellitem.contents[0]}}</view>
-            <view class='datalist-marey'>{{cellitem.contents[2]}}</view>
-          </view>
-      </block>
+<view class='homebody'>
+  <view class="home-search">
+      <icon type="search" size="15" class="search-icon"></icon>
+      <input class="search-input" 
+        name="searchinput"
+        placeholder="零件号搜索"
+        value="{{inputdata}}" 
+        focus="{{input_focus}}"
+        bindinput="inputchange"
+        bindfocus="focusInputEvent"
+        bindblur="blurInputEvent"
+        />
+      <icon type="cancel" size="15" class="{{inputclear?'cancel-icon':'none-icon'}}" bindtap="inputClear"></icon>
+      <button class="search-btn" bindtap="goSearch">查询</button>
+
+      <view class='{{input_focus?"search-history":"search-historyno"}}'>
+        <block wx:for="{{history}}" wx:key="{{index}}" > 
+          <view class="search-h-click" bindtap="getpartnum" data-world="{{item}}">{{item}}</view>
+        </block>
+      </view>
+  </view>
+</view>
+
+<image class="search-img" mode='aspectFit' src="{{imgsrc}}"></image>
+
+<!-- <view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view>
-  <button class='paybtn' bindtap='payBtn'>确认支付</button>
-</view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view> -->
