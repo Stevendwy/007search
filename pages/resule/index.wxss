@@ -128,6 +128,7 @@
 .result{
   display: flex;
   flex-direction:column;
+  z-index:3;
 }
 
 .result-left{
@@ -135,7 +136,7 @@
   /* padding:5px 0; */
   position:fixed;
   background-color:white;
-  z-index:4;
+  z-index:7;
   min-width:100%;
   box-shadow: 0 1px 8px 0 rgba(0,0,0,0.4);
   top:88rpx;
@@ -171,6 +172,18 @@
   border-bottom:transparent;
 }
 
+/* 获取更多供应商信息 */
+.resule-left-btnmore{
+  color:#C8372B;
+  font-size:11pt;
+  letter-spacing:0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* border-bottom:2px solid #C8372B; */
+  width:50%;
+}
+
 .result-right{
   margin-top:35px;
   display: inline-block;
@@ -187,6 +200,7 @@
 .result-right-list{
   position: relative;
   padding: 40rpx 16rpx 100rpx 16rpx;
+  z-index: 0;
 }
 .nav-show{
  display: flex;
@@ -278,26 +292,68 @@
   padding-bottom: 50px;
 } */
 
+/*是否到底显示  */
+.bottom-show{
+  text-align:center;
+}
+.bottom-line{
+  border-bottom:1px dashed gray;
+  font-size:7pt;
+  padding:20rpx 0 6rpx 0;
+}
 /*问题反馈  */
 .feekbackinput{
   margin:20rpx 0;
 }
+.feedback-body{
+  display:flex;
+  padding:20rpx 0 20rpx 0;
+}
 .feed-input{
-  min-height: 300rpx;
+  height: 30px;
   border:1px solid black;
   padding:10rpx;
-  width:auto;
-  height: auto;
+  width:77%; 
   border-radius: 10rpx;
+  z-index: 3;
+  font-size:10pt;
+  display:inline-flex;
+  /* margin: 10rpx 0 20rpx 0; */
+  /* display:flex;
+  flex-direction:row;
+  flex-wrap:wrap; */
 }
 .feed-btn{
-  height:80rpx;
+  /* height:80rpx;
   margin:20rpx 0;
-  font-size:12pt;
+  font-size:12pt; */
+  width:15%;
+  display:inline-flex;
+  height:40px;
+  font-size:10pt;
+  padding:10rpx;
+  margin:0 1%;
+  justify-content:center;
 }
 
 .searchmore{
   margin: 30rpx 0;
+}
+
+/*书签  */
+.bookmark{
+  display: flex;
+  flex-direction: row;
+  flex-wrap:wrap;
+}
+.bookmark-list{
+    text-align: center;
+    border-radius: 4px;
+    font-size: 8pt;
+    color: #666666;
+    padding: 3px;
+    margin: 3px;
+    background-color: rgba(216,216,216,0.8);
 }
 
 /*添加图片  */

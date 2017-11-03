@@ -58,7 +58,7 @@
       </view>
   </view>
 
-   <scroll-view class="result-right"  scroll-y="true" scroll-with-animation="true"> 
+   <scroll-view class="result-right"  scroll-y="true" scroll-with-animation="true" bindscrolltolower="bindSellMore"> 
    <!-- <scroll-view class="result-right" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true"> -->
      <!-- <image src="{{imgbrand}}" class="brands"></image> -->
     <view class='{{dataMes.length > 0 && toView=="gomessage" ? "result-right-list result-right-message":"notshow"}}' id="gomessage">
@@ -186,12 +186,14 @@
       </view>
 
     <!--bindlongtap="phoneNumTap" 拨打电话  -->
-      <block wx:for="{{sellmarket}}" wx:key="{{index}}">
+      <block wx:for="{{sellmarket}}" wx:key="{{index}}" >
         <view class="result-right-listcontent" >
           <block wx:for="{{selllefttitle}}" 
                  wx:key="cell" 
                  wx:for-item="cellitem" 
                  wx:for-index="cellindex"
+                 data-phone="{{item.merchant_phone}}"
+                 bindlongtap="phoneNumTap"
                  >
             <view class="list-content">
               <text selectable class="list-left">{{cellitem}}</text>
@@ -201,18 +203,23 @@
         </view>
       </block>
 
-      <view class='searchmore'>
-          <button class="{{clickindex == 13?'resule-left-btn':'resule-left-list'}}"                     bindtap="scrollToViewFnBtn" 
-                data-id="toFeedback" 
-                data-index="{{13}}"
+      <view class='searchmore'> 
+          <button class="'resule-left-btnmore'{{hasphone == 1 ? '  notshow':''}}{{selldataend == 1 ? '  notshow':''}}" 
+          open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"
           >更多供应商...</button>
+          <button class="'resule-left-btnmore'{{hasphone == 0 ? '  notshow':''}}{{selldataend == 1 ? '  notshow':''}}"
+          bindtap='getMoreSellMarket'
+          >更多供应商 ...</button>
+      </view>
+      <view class="{{selldataend == 1 ? 'bottom-show' : 'notshow'}}" >
+          <view class='bottom-line'>我是有底线的</view>
       </view>
     </view>
 
-    <view class='{{sellmarket.length > 0 && (toView=="toBuy") ? "result-right-list result-right-tosell":"notshow"}}' id="toBuy">
+    <view class='{{buymarket.length > 0 && (toView=="toBuy") ? "result-right-list result-right-tosell":"notshow"}}' id="toBuy">
       <view class="nav-show">
         <view class="nav-show-block"></view>
-        <text>求购</text>
+        <text>求购信息</text>
       </view>
 
       <block wx:for="{{buymarket}}" wx:key="{{index}}">
@@ -225,10 +232,13 @@
           </block> 
         </view>
       </block>
+      <view class="{{buydataend == 1 ? 'bottom-show' : 'notshow'}}" >
+          <view class='bottom-line'>我也是有底线的</view>
+      </view>
     </view>
 
 
-    <view class='{{sellmarket.length > 0 && (toView=="toFeedback") ? "result-right-list result-right-tosell":"notshow"}}' id="toFeedback">
+    <view class='{{toView=="toFeedback" ? "result-right-list result-right-tosell":"notshow"}}' id="toFeedback">
       <view class="nav-show">
         <view class="nav-show-block"></view>
         <text>问题反馈</text>
@@ -236,18 +246,28 @@
 
       <view class='feekbackinput'>
         <form bindsubmit='feedBackBtn' >
-          <textarea type="text"
+          <view class='bookmark'>
+            <block wx:for="{{bookmark}}" wx:key="index" wx:for-item="item">
+                <text class="bookmark-list" bindtap='inputmark' data-values="{{item}}">{{item}}</text>
+            </block> 
+          </view>
+          
+          <view class='feedback-body'>
+              <input type="text"
                     maxlength=-1
                     name="textarea"
-                    auto-height 
+                    auto-height
                     placeholder="输入反馈内容："
                     value="{{textareavalue}}" 
-                    class='feed-input' />
-          <button type="default" 
-                  size="default"
-                  class='feed-btn'
-                  form-type="submit"
-                    >提交反馈</button>
+                    class='feed-input' 
+                    bindinput="inputfeed"
+                    />
+            <button type="default" 
+              size="default"
+              class='feed-btn'
+              form-type="submit"
+                >提交</button>
+          </view>        
           </form>
       </view>
     </view>
@@ -255,18 +275,20 @@
 
     <view class="result-btn">
       <button 
-        class="{{clickindex == 11?'resule-left-btn':'resule-left-list'}}"                   bindtap="scrollToViewFn" 
+        class="{{clickindex == 11?'resule-left-btn':'resule-left-list'}}"
+bindtap="scrollToViewFnBtn" 
         data-id="toSell" 
         data-index="{{11}}"
         >供货商</button>
-      <button class="{{clickindex == 12?'resule-left-btn':'resule-left-list'}}"                  bindtap="scrollToViewFnBtn" 
+      <button class="{{clickindex == 12?'resule-left-btn':'resule-left-list'}}"                  
+            bindtap="scrollToViewFnBtn" 
             data-id="toBuy" 
             data-index="{{12}}"
       >需求市场</button>
-      <button class="{{clickindex == 13?'resule-left-btn':'resule-left-list'}}"                     bindtap="scrollToViewFnBtn" 
+      <button class="{{clickindex == 13?'resule-left-btn':'resule-left-list'}}"                     
+            bindtap="scrollToViewFnBtn" 
             data-id="toFeedback" 
             data-index="{{13}}"
-            open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" 
       >问题反馈</button>
     </view>
 <!--open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber"   -->

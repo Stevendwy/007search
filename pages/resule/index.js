@@ -13,23 +13,31 @@ Page({
     phoneNumber:"",               //拨打电话
     textareavalue: "",            //textarea 输入内容
     storehas:[],                  //是否新加仓库
-    sellmarket: sellData,         //供货市场
+    ajaxallow:false,              //是否允许再次请求数据
+
+    sellmarket: [],         //供货市场
     selllefttitle: ["供应商", "联系电话","库存"],
-    sellrightlist: ["name", "phone", "remark"],
+    sellrightlist: ["merchant_name", "merchant_phone", "stock_status"],
+    selldataend:1,                  //供货市场数据是否最后页码
+    selldatapage:1,                //默认供货市场请求页码
 
     buymarket: [],                  //需求市场
     buylefttitle: ["客户", "求购零件号", "联系电话"],
-    buyrightlist: ["name", "pid", "phone"],
+    buyrightlist: ["buyer_name", "pid", "buyer_phone"],
+    buydataend: 1,            //需求市场数据是否最后页码
+    buydatapage:1,                //默认默认需求请求页码
 
     userInfo: {},
     hasUserInfo: false,
-
+    hasuid:"",                    //存储openid
+    hasphone:0,                    //存储手机号
     brandlist:[],                   //存储的品牌
     storebrand:"",
-    toView: "gomessage",
-    clickindex:0,
-    clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
+    newbrand:"",                     //仅供发参数
+    toView: "gomessage",            //判断显示那个页面
+    clickindex:0,                   //判断显示那个页面 index
 
+    clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
     dataMes:[],
     dataPrice:[],
     dataReplace:[],
@@ -59,6 +67,7 @@ Page({
     inputdata: "",
     savehistory: ["95820102100", "64319313519", "24007621038", "12317605061","12317605478"],
     history: ["95820102100", "64319313519", "24007621038", "12317605061","12317605478"],
+    bookmark: ['速度慢', '价格不准确', '需要添加供应商信息', '数据不全','需要添加求购零件信息','数据错误','联系方式不准确'],
 
     searched:false,
     getresult:false,
@@ -78,6 +87,13 @@ Page({
       })
     }
   },
+  inputfeed: function (e) {
+    let s_input = e.detail.value
+    // let _data = this.data.textareavalue + s_input
+    this.setData({
+      textareavalue: s_input
+    })
+  },
 
   inputClear: function () {
     this.setData({
@@ -88,6 +104,10 @@ Page({
     })
   },
   goSearch: function (e) {
+    //先获取用户信息
+    if (this.data.hasuid == "" || this.data.hasphone == 0) {
+      this.whetherlogin()    //获取用户 登录信息
+    }
     // 获取用户资料 二次添加需用
     if (this.data.hasUserInfo != true) {
       let that = this
@@ -103,7 +123,6 @@ Page({
             if (data.authSetting["scope.userInfo"] == true) {
               wx.getUserInfo({
                 success: function (datw) {
-                  console.info(datw);
                   app.globalData.userInfo = datw.userInfo
                   that.setData({
                     userInfo: datw.userInfo,
@@ -135,12 +154,19 @@ Page({
         dataModule: [],
         dataTeach: [],
         dataTechnology: [],
+
+        sellmarket:[],
+        selldatapage:1,
+
+        buymarket:[],
+        buydatapage:1,
         toView: "gomessage",
         clickindex: 0,
       })
       let _obj = util.headAdd("/parts/search")
-      _obj.parts = search_input
-      _obj.brand = that.data.storebrand
+        _obj.parts = search_input
+        _obj.brand = that.data.storebrand
+        // that.data.storebrand
       wx.request({
         url: 'https://007vin.com/parts/search',
         data: _obj,
@@ -179,67 +205,28 @@ Page({
               savehistory: _savehistory,
               history: _savehistory,
               input_focus: false,
-              storebrand: ""
+              storebrand: '',
+              newbrand:res.data.brand
             })
             that.dataGet(res.data.brand, search_input)
-            let _storehas = that.data.storehas
-            let _addpid = [];
-            _storehas.forEach(function (val, index, arr) {
-              _addpid.push(val.attributes.pid)
-            })
-            if (_addpid.indexOf(search_input) == -1){
+              //录入数据库
+              let _obj = util.headAdd("/wechattool/buyer_history_record")
+                  _obj.uid_auth = that.data.hasuid            //openid
+                  _obj.pid = search_input                     //零件号
+                  _obj.brandCode = res.data.brand               //品牌
+                  _obj.nickName = that.data.userInfo.nickName   //用户名
+                  _obj.city = that.data.userInfo.city           //城市
+                  _obj.province = that.data.userInfo.province   //省份
 
-
-              //调用微信登录接口  
-              wx.login({
-                success: function (loginCode) {
-                  console.log(loginCode)
-                  //获取openId
-                  // wx.request({
-                  //   url: 'https://api.weixin.qq.com/sns/jscode2session',
-                  //   data: {                     
-                  //     appid: 'wxe7a1eb2d258d1150',                     
-                  //     secret: 'd1b8f55bccd82763db9745f080b38ddc',
-                  //     grant_type: 'authorization_code',
-                  //     js_code: loginCode.code
-                  //   },
-                  //   method: 'GET',
-                  //   header: { 'content-type': 'application/json' },
-                  //   success: function (res) {
-                  //     console.log(res.data.openid)  
-                  //   }
-                  // })
+              wx.request({
+                url: 'https://union.007vin.com/wechattool/buyer_history_record',
+                data: _obj,
+                method: 'post',
+                header: { "Content-Type": "application/x-www-form-urlencoded" },
+                success: function (res) {
+                  // console.log('储存信息完成'+ res)
                 }
-              }) 
-
-
-
-
-
-
-
-
-              // 添加表 录入数据库
-              let Diary = Bmob.Object.extend("factory");
-              let diary = new Diary();
-              diary.set("pid", search_input);
-              diary.set("name", that.data.userInfo.nickName);
-              diary.set("phone", "******");
-              diary.set("remark", "******");
-              diary.set("role", "buy");
-              //添加数据，第一个入口参数是null
-              diary.save(null, {
-                success: function (result) {
-                  // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
-                  // console.log("日记创建成功, objectId:" + result.id);
-                },
-                error: function (result, error) {
-                  // 添加失败
-                  // console.log('创建日记失败');
-
-                }
-              });
-            }
+              })
           }
         }
       })
@@ -247,45 +234,124 @@ Page({
 
     
   },
-  //提交反馈信息
-  feedBackBtn:function(e){
-    console.log(e.detail.value.textarea)
-    this.setData({
-      textareavalue: ''
+  //调用微信登录接口 获取手机号 和 openid
+  whetherlogin: function (types = "login", phone = "", uid = "", iv=""){
+    let that = this
+    wx.login({
+      success: function (loginCode) {
+        if(types=="phone"){
+          let _objs = util.headAdd("/wechattool/userphone_record")
+          _objs.phone_auth = phone
+          _objs.uid_auth = uid
+          _objs.iv = iv
+          _objs.js_code = loginCode.code             //loginCode
+
+          _objs.nickName = that.data.userInfo.nickName   //用户名
+          _objs.city = that.data.userInfo.city           //城市
+          _objs.province = that.data.userInfo.province   //省份
+          wx.request({
+            url: 'https://union.007vin.com/wechattool/userphone_record',
+            data: _objs,
+            method: 'post',
+            header: { "Content-Type": "application/x-www-form-urlencoded" },
+            success: function (res) {
+              // console.log('获取手机号结果' + res.data)
+              // that.whetherlogin()
+              that.setData({
+                hasphone: res.data.phone_verified,           //存储手机号
+              },
+                  that.getSellMarket() //默认再次请求
+              )
+            }
+          })
+        }else{
+          //获取openId
+          let _obj = util.headAdd("/wechattool/userinfo")
+              _obj.js_code = loginCode.code             //loginCode
+          wx.request({
+            url: 'https://union.007vin.com/wechattool/userinfo',
+            data: _obj,
+            method: 'post',
+            header: { "Content-Type": "application/x-www-form-urlencoded" },
+            success: function (res) {
+              // console.log('获取手机号状态 uid'+res)
+              that.setData({
+                hasuid: res.data.uid_auth,                   //存储openid
+                hasphone: res.data.phone_verified,           //存储手机号
+              })
+            }
+          })
+        }
+      }
     })
-    // 延时 完善微信bug 
-    setTimeout(_ => {
-      this.setData({
+  },
+
+  //提交反馈信息
+  inputmark:function(e){
+    let _data = this.data.textareavalue + e.target.dataset.values +" ，"
+    this.setData({
+      textareavalue: _data
+    })
+  },
+  feedBackBtn:function(e){
+    // console.log(e.detail.value.textarea)
+    if (e.detail.value.textarea.replace(/\s+/g, "").length > 0){
+      let that = this
+      let _obj = util.headAdd("/wechattool/feedback")
+      _obj.uid_auth = that.data.hasuid
+      // _obj.phone = "" || ""  选填手机号
+      _obj.uid_auth = that.data.hasuid
+      _obj.feedback_content = e.detail.value.textarea
+      _obj.nickName = that.data.userInfo.nickName
+
+      wx.request({
+        url: 'https://union.007vin.com/wechattool/feedback',
+        data: _obj,
+        method: 'post',
+        header: { "Content-Type": "application/x-www-form-urlencoded" },
+        success: function (res) {
+          // console.log('提交反馈信息完成'+res.data)
+          wx.showToast({
+            title: '问题已经反馈',
+            icon: '',
+            duration: 2000
+          })
+        }
+      })
+      that.setData({
         textareavalue: ''
       })
-    }, 300)
+      // 延时 完善微信bug 
+      setTimeout(_ => {
+        that.setData({
+          textareavalue: ''
+        })
+      }, 300)
+    }
   },
   //获取用户手机号
-  getPhoneNumber: function (e) {
-    console.log(e.detail.errMsg)
-    console.log(e.detail.iv)
-    console.log(e.detail.encryptedData)
-    // if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
-    //   wx.showModal({
-    //     title: '提示',
-    //     showCancel: false,
-    //     content: '未授权',
-    //     success: function (res) { }
-    //   })
-    // } else {
-    //   wx.showModal({
-    //     title: '提示',
-    //     showCancel: false,
-    //     content: '同意授权',
-    //     success: function (res) { }
-    //   })
-    // }
+  getPhoneNumber: function (e) { 
+    let that = this  
+    if (e.detail.errMsg != 'getPhoneNumber:fail user deny') {
+      // console.log("agree")
+      // console.log(e.detail.errMsg)
+      // console.log(e.detail.iv)
+      // console.log(e.detail.encryptedData)
+      that.whetherlogin("phone", e.detail.encryptedData, that.data.hasuid, e.detail.iv)
+    }   
+  },
+  //点击获取更多
+  getMoreSellMarket:function(){
+    let that = this 
+    let _page = 1 + that.data.selldatapage
+    that.getSellMarket(_page)
   },
   // 拨打电话
-  phoneNumTap:function(){
-    // wx.makePhoneCall({
-    //   phoneNumber: '17682302034',
-    // })
+  phoneNumTap:function(e){
+    let phonenum = e.target.dataset.phone;
+    wx.makePhoneCall({
+      phoneNumber: phonenum,
+    })
   },
 
   //获取品牌
@@ -322,45 +388,98 @@ Page({
   },
 // 获取需求市场数据
   scrollToViewFnBtn: function (e) {
-    console.log(this.data.userInfo)
     let _id = e.target.dataset.id;
     let _index = e.target.dataset.index;
     let that = this
-    if (that.data.buymarket.length < 1){
-      let Diary = Bmob.Object.extend("factory");
-      let query = new Bmob.Query(Diary);    
-      // query.limit(10);
-      query.find({
-        success: function (object) {
-          let _cleardata = []
-          if (object.length>10){
-            _cleardata = object.reverse().slice(0,9)
-          }
-          that.setData({
-            storehas: _cleardata,
-            buymarket: _cleardata,
-            toView: _id,
-            clickindex: _index
-          })
-          // 查询成功
-        },
-        error: function (error) {
-          console.log("查询失败: " + error.code + " " + error.message);
-        }
-      });
-    }else{
-      that.setData({
-        toView: _id,
-        clickindex: _index
-      })
+    if (_index == 11 ){
+      //获取卖方市场信息
+      that.getSellMarket()
+    } else if (_index == 12) {
+       //获取买方市场数据
+      that.getBuyMarket()
     }
+    that.setData({
+      toView: _id,
+      clickindex: _index
+    })   
+  },
+
+  //获取卖方市场信息
+  getSellMarket:function(page=1){
+    let that = this
+    that.setData({
+      selldatapage: 1,
+      selldataend: 1
+    })
+    let _obj = util.headAdd("/wechattool/merchant_list")
+    _obj.uid_auth = that.data.hasuid
+    _obj.brandCode = that.data.newbrand
+    _obj.page = page
+    wx.request({
+      url: 'https://union.007vin.com/wechattool/merchant_list',
+      data: _obj,
+      method: 'post',
+      header: { "Content-Type": "application/x-www-form-urlencoded" },
+      success: function (res) {
+        // console.log('获取供应商信息'+res.data)
+        // console.log(res.data.last_page)
+        that.setData({
+          ajaxallow:false,
+          sellmarket: res.data.data,
+          selldatapage: res.data.page,
+          selldataend: res.data.last_page
+        })
+      }
+    })
+  },
+
+  //上拉加载 更多数据
+  bindSellMore:function(){
+    let that = this
+    if (that.data.ajaxallow){return}
+    that.setData({
+      ajaxallow: true
+    })
+    if (that.data.clickindex == 12 && that.data.buydataend == 0){
+      let _pages = 1 + that.data.buydatapage 
+      that.getBuyMarket(_pages)
+    } 
+  //为获取手机号 供应商 下拉不刷新
+  //  if (that.data.clickindex == 11 && that.data.selldataend == 0){
+  //     let _page = 1 + that.data.selldatapage
+  //     that.getSellMarket(_page)
+  //   }
+  },
+
+  //获取买方市场数据
+  getBuyMarket:function(page=1){
+    let that = this
+    let _obj = util.headAdd("/wechattool/buyer_list")
+    _obj.uid_auth = that.data.hasuid
+    _obj.page = page
+    wx.request({
+      url: 'https://union.007vin.com/wechattool/buyer_list',
+      data: _obj,
+      method: 'post',
+      header: { "Content-Type": "application/x-www-form-urlencoded" },
+      success: function (res) {
+        // console.log('获取买方信息' + res.data)
+        that.setData({
+          ajaxallow: false,
+          storehas: res.data.data,
+          buymarket: res.data.data,
+          buydatapage: res.data.page,
+          buydataend: res.data.last_page
+        })
+      }
+    })
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     // this.dataGet(options.fortdata, options.pid) 
-    var that = this;  
+    let that = this;  
     if (options.bindpid){
       that.setData({
         inputdata: options.bindpid,
@@ -407,7 +526,8 @@ Page({
         });
       }
     });
-    this.newgetuserInfo() 
+    that.newgetuserInfo()  //获取用户信息
+    that.whetherlogin()    //获取用户 登录信息
   },
   newgetuserInfo:function(){
     //获取用户信息
@@ -438,7 +558,7 @@ Page({
       })
     }
   },
-  dataGet(date,pid) { 
+  dataGet(date,pid) {
     let that = this  
     let _obj = util.headAdd("/ppys/partssearchs")
         _obj.part = pid
