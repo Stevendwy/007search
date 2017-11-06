@@ -348,9 +348,11 @@ Page({
   },
   // 拨打电话
   phoneNumTap:function(e){
-    let phonenum = e.target.dataset.phone;
+    let phonenum = e.currentTarget.dataset.phone;
+    let _split = '/'
+    let _phone = phonenum.split(_split)[0] || phonenum
     wx.makePhoneCall({
-      phoneNumber: phonenum,
+      phoneNumber: _phone,
     })
   },
 

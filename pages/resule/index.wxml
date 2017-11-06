@@ -187,17 +187,17 @@
 
     <!--bindlongtap="phoneNumTap" 拨打电话  -->
       <block wx:for="{{sellmarket}}" wx:key="{{index}}" >
-        <view class="result-right-listcontent" >
+        <view class="result-right-listcontent" 
+                  data-phone="{{item.merchant_phone}}" 
+                  bindlongtap='phoneNumTap'>
           <block wx:for="{{selllefttitle}}" 
                  wx:key="cell" 
                  wx:for-item="cellitem" 
                  wx:for-index="cellindex"
-                 data-phone="{{item.merchant_phone}}"
-                 bindlongtap="phoneNumTap"
                  >
-            <view class="list-content">
-              <text selectable class="list-left">{{cellitem}}</text>
-              <text selectable class="list-right">{{item[sellrightlist[cellindex]]}}</text>
+            <view class="list-content" >
+              <text class="list-left">{{cellitem}}</text>
+              <text class="list-right">{{item[sellrightlist[cellindex]]}}</text>
             </view>
           </block> 
         </view>
