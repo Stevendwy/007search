@@ -34,8 +34,8 @@ Page({
     brandlist:[],                   //存储的品牌
     storebrand:"",
     newbrand:"",                     //仅供发参数
-    toView: "gomessage",            //判断显示那个页面
-    clickindex:0,                   //判断显示那个页面 index
+    toView: "toSell",            //判断显示那个页面
+    clickindex:11,                   //判断显示那个页面 index
 
     clickid: ["gomessage", "goprice", "goreplace", "gomodule","goteach","gotechnology"],
     dataMes:[],
@@ -160,8 +160,8 @@ Page({
 
         buymarket:[],
         buydatapage:1,
-        toView: "gomessage",
-        clickindex: 0,
+        toView: "toSell",
+        clickindex: 11,
       })
       let _obj = util.headAdd("/parts/search")
         _obj.parts = search_input
@@ -208,6 +208,7 @@ Page({
               storebrand: '',
               newbrand:res.data.brand
             })
+            that.getSellMarket() //请求供应商列表
             that.dataGet(res.data.brand, search_input)
               //录入数据库
               let _obj = util.headAdd("/wechattool/buyer_history_record")
